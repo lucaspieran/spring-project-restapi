@@ -39,7 +39,7 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    private Claims getAllClaims(String token) {
+    public Claims getAllClaims(String token) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())
@@ -66,4 +66,6 @@ public class JwtService {
     private Date getExpiration(String token) {
         return getClaim(token, Claims::getExpiration);
     }
+
+
 }

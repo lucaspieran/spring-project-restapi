@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,6 +35,7 @@ public class User implements UserDetails {
     private String email;
     @JsonIgnore
     private String password;
+    private String profileImg;
     @Enumerated(EnumType.STRING)
     private Role role;
     @Column(nullable = false, updatable = false)
@@ -43,8 +43,20 @@ public class User implements UserDetails {
     private Date created_at;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-   @JsonManagedReference
+    @JsonManagedReference
     private List<Post> postList;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", role='" + role + '\'' +
+                ", profileImg='" + profileImg + '\'' +
+                '}';
+    }
 
     @Override
     @JsonIgnore

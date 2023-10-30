@@ -46,4 +46,14 @@ public class PostController {
        }
     }
 
+    @PostMapping("/{postId}")
+    public ResponseEntity<String> updatePost(@PathVariable Long postId, @RequestBody Post request) {
+        try {
+            postService.updatePost(postId, request);
+            return ResponseEntity.ok("Post actualizado correctamente");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
 }

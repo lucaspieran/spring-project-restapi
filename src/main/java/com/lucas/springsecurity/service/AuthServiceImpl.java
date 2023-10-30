@@ -24,14 +24,18 @@ public class AuthServiceImpl implements  AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final FileUpload fileUpload;
+
     @Override
     public AuthResponse register(RegisterRequest request) {
+        String img = fileUpload.upload(request.getFile());
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
+                .profileImg(img)
                 .build();
         userRepository.save(user);
 

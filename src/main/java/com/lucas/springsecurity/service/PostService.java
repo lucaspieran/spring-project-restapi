@@ -7,6 +7,8 @@ import com.lucas.springsecurity.repository.PostRepository;
 import com.lucas.springsecurity.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +20,15 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(PostService.class);
+
     public List<Post> getAllPosts() {
         return postRepository.findAll();
     }
 
     public Post create(CreatePost post) {
         Optional<User> userOptional = userRepository.findById(post.getUserId());
+        logger.info("create user {}");
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -33,10 +38,24 @@ public class PostService {
                     .title(post.getTitle())
                     .user(user)
                     .build();
+            logger.info("create user {}", newPost);
 
             return postRepository.save(newPost);
         } else {
             throw new RuntimeException("Usuario no encontrado con ID: " + post.getUserId());
+        }
+    }
+
+     public void updatePost(Long postId, Post updatedPost) {
+        Optional<Post> existingPostOptional = postRepository.findById(postId);
+
+        if (existingPostOptional.isPresent()) {
+            Post existingPost = existingPostOptional.get();
+            existingPost.setTitle(updatedPost.getTitle());
+            existingPost.setContent(updatedPost.getContent());
+
+
+            postRepository.save(existingPost);
         }
     }
 }
